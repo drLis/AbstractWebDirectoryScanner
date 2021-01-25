@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace AbstractWebDirectoryScanner
 {
 	class Program
 	{
-		static void Scan(String url, String pathToFile)
+		static async Task ScanAsync(String url, String pathToFile)
 		{
 			using (var stream = new StreamReader(pathToFile))
 			{
@@ -22,11 +23,11 @@ namespace AbstractWebDirectoryScanner
 					try
 					{
 						var request = HttpWebRequest.Create(url + "/" + line);
-						HttpWebResponse result = (HttpWebResponse)request.GetResponse();
+						HttpWebResponse result = (HttpWebResponse)await request.GetResponseAsync();
 						if (result.StatusCode == HttpStatusCode.OK)
 						{
 							Console.WriteLine(url + "/" + line);
-							Scan(url + "/" + line, pathToFile);
+							ScanAsync(url + "/" + line, pathToFile);
 						}
 					}
 					catch (Exception e)
@@ -50,7 +51,7 @@ namespace AbstractWebDirectoryScanner
 				try
 				{
 					Console.WriteLine($"{args[0]} {args[1]}");
-					Scan(args[0], args[1]);
+					ScanAsync(args[0], args[1]).Wait();
 				}
 				catch (Exception e)
 				{
