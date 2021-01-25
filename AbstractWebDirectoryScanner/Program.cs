@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 
 namespace AbstractWebDirectoryScanner
 {
@@ -6,7 +8,15 @@ namespace AbstractWebDirectoryScanner
 	{
 		static void Scan(String url, String pathToFile)
 		{
-
+			using (var stream = new StreamReader(pathToFile))
+			{
+				String line = stream.ReadLine();
+				while (line is not null)
+				{
+					Console.WriteLine(line);
+					line = stream.ReadLine();
+				}
+			}
 		}
 
 		static void Main(string[] args)
